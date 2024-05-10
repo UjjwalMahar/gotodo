@@ -5,6 +5,7 @@ package database
 import (
 	"context"
 	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -24,6 +25,7 @@ func Init() {
 
 	//client options
 	clientOptions := options.Client().ApplyURI(mongoUri)
+	clientOptions.SetTimeout(2*time.Second)
 
 	//create mongo client instance
 	client, err := mongo.Connect(context.TODO(), clientOptions)
