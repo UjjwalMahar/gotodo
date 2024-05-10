@@ -7,6 +7,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/UjjwalMahar/gotodo/internal/model"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -25,6 +26,7 @@ func Init() {
 
 	//client options
 	clientOptions := options.Client().ApplyURI(mongoUri)
+	
 	clientOptions.SetTimeout(2*time.Second)
 
 	//create mongo client instance
@@ -43,5 +45,18 @@ func Init() {
 	//creating mongodb collection instance
 	userCollection = client.Database(databaseName).Collection(collectionName)
 
-	log.Printf("User collection created: %v and is ready to use!\n ", userCollection)
+	log.Printf("User collection created and is ready to use!\n ")
 }
+
+
+// SaveTodoToDB saves a todo into the database
+func SaveTodoToDB(todo model.Todo) error {
+	_, err := userCollection.InsertOne(context.Background(), todo)
+	if err != nil {
+		log.Printf("Failed to save todo to database: %v\n", err)
+		return err
+	}
+	return nil
+}
+
+
